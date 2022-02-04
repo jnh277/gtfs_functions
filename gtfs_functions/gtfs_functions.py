@@ -58,12 +58,7 @@ def import_gtfs(gtfs_path, busiest_date = True):
     import os
     import pandas as pd
     import zipfile
-
-    try:
-        import partridge as ptg 
-    except ImportError as e:
-        os.system('pip install partridge')
-        import partridge as ptg
+    import partridge as ptg
     # Partridge to read the feed
     # service_ids = pd.read_csv(gtfs_path + '/trips.txt')['service_id'].unique()
     # service_ids = frozenset(tuple(service_ids))
@@ -100,23 +95,9 @@ def import_gtfs(gtfs_path, busiest_date = True):
 def cut_gtfs(stop_times, stops, shapes):
     import warnings
     warnings.filterwarnings("ignore")
-    import os
     import pandas as pd
-#--------------------------------------------------------
-    os.system('apt install libspatialindex-dev')
-    os.system('pip install rtree')
-#----------------------------------------------------------
-    try:
-        import geopandas as gpd 
-    except ImportError as e:
-        os.system('pip install geopandas')
-        import geopandas as gpd
-    try:
-        import utm
-    except ImportError as e:
-        os.system('pip install utm')
-        import utm
-
+    import geopandas as gpd
+    import utm
     from shapely.ops import nearest_points
     from shapely.geometry import Point, LineString, MultiLineString, MultiPoint
     from shapely.ops import split
@@ -661,12 +642,8 @@ def speeds_from_gtfs(routes, stop_times, segments_gdf, cutoffs = [0,6,9,15,19,22
     import pandas as pd
     import math
     import os
-    
-    try:
-        import geopandas as gpd 
-    except ImportError as e:
-        os.system('pip install geopandas')
-        import geopandas as gpd
+    import geopandas as gpd
+
     
     routes = routes
     stop_times = stop_times
@@ -874,18 +851,9 @@ def create_json(gdf, variable, filename,
     import os
     import json
     import pandas as pd
+    import utm
+    import jenkspy
 
-    try:
-        import utm
-    except ImportError as e:
-        os.system('pip install utm')
-        import utm
-
-    try:
-        import jenkspy
-    except ImportError as e:
-        os.system('pip install jenkspy')
-        import jenkspy
     if symbol_layer:
       # All categorical variable layer thing
       # We start with Remix Lightrail colors and then add default colors from Plotly
@@ -1070,14 +1038,8 @@ def stops_freq(stop_times, stops, cutoffs = [0,6,9,15,19,22,24]):
     warnings.filterwarnings("ignore")
     import math
     import pandas as pd
-    import os
     import re
-    
-    try:
-        import geopandas as gpd 
-    except ImportError as e:
-        os.system('pip install geopandas')
-        import geopandas as gpd
+    import geopandas as gpd
   
     hours = list(range(25))
     hours_labels = [str(hours[i]) + ':00' for i in range(len(hours)-1)]
@@ -1168,17 +1130,9 @@ def map_gdf(gdf, variable,
     import pandas as pd
     import os
     import plotly.express as px
-    try:
-      import jenkspy
-    except ImportError as e:
-      os.system('pip install jenkspy')
-      import jenkspy
-  
-    try:
-      import folium
-    except ImportError as e:
-      os.system('pip install folium')
-      import folium
+    import jenkspy
+    import folium
+
 
     # Look for the center of the map
     minx, miny, maxx, maxy = gdf.geometry.total_bounds
@@ -1257,12 +1211,8 @@ def lines_freq(stop_times, trips, shapes, routes, cutoffs = [0,6,9,15,19,22,24])
     import pandas as pd
     import os
     import re
-    
-    try:
-        import geopandas as gpd 
-    except ImportError as e:
-        os.system('pip install geopandas')
-        import geopandas as gpd
+    import geopandas as gpd
+
     
     # Generate the hours of the day
     hours = list(range(25))
@@ -1378,12 +1328,8 @@ def segments_freq(segments_gdf, stop_times, routes, cutoffs = [0,6,9,15,19,22,24
     import pandas as pd
     import os
     import re
-    
-    try:
-        import geopandas as gpd 
-    except ImportError as e:
-        os.system('pip install geopandas')
-        import geopandas as gpd
+    import geopandas as gpd
+
     
     # Generate the hours of the day
     hours = list(range(25))

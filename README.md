@@ -1,4 +1,4 @@
-# GTFS functions
+# Fork of GTFS functions
 
 This package allows you to create various layers directly from the GTFS and visualize the results in the most straightforward way possible.
 It is still in its testing face.
@@ -18,13 +18,20 @@ It is still in its testing face.
 ## Installation <a class="anchor" id="installation"></a>
 
 
-```python
-!pip install gtfs_functions
+Clone the git repository, change to directory and run
+```
+pip install ./
 ```
 
 
 ```python
 import gtfs_functions as gtfs
+```
+
+The cut_gtfs function requires the use of 'libspatialindex-dev' which can
+be installed by
+```
+apt install libspatialindex-dev
 ```
 
 # GTFS Import <a class="anchor" id="gtfs_parsing"></a>

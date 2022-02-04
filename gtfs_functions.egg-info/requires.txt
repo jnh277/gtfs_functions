@@ -1,0 +1,10 @@
+pandas
+rtree
+geopandas
+utm
+shapely
+jenkspy
+plotly
+branca
+folium
+partridge
