@@ -50,9 +50,10 @@ def save_gdf(data, file_name, geojson=False, shapefile=True):
             os.remove(file_name + ex) # in case I want to remove the files out of the shapefile
     
         zipObj.close()
+
         
     
-def import_gtfs(gtfs_path, busiest_date = True):
+def import_gtfs_busiest_week(gtfs_path):
     import warnings
     warnings.filterwarnings("ignore")
     import os
@@ -63,8 +64,68 @@ def import_gtfs(gtfs_path, busiest_date = True):
     # service_ids = pd.read_csv(gtfs_path + '/trips.txt')['service_id'].unique()
     # service_ids = frozenset(tuple(service_ids))
         
+
+    service_dict = ptg.read_busiest_week(gtfs_path)
+
+    # week_info = 
+    for i, key in enumerate(service_dict.keys()):
+	    service_ids = service_dict[key]
+        
+	    view = {'trips.txt': {'service_id': service_ids}}
+	    
+	    feed = ptg.load_geo_feed(gtfs_path, view)
+	    
+	    routes = feed.routes
+	    trips = feed.trips
+	    stop_times = feed.stop_times
+	    stop_times['arrival_time'] = stop_times['arrival_time'] + i*24*3600
+	    stop_times['departure_time'] = stop_times['departure_time'] + i*24*3600
+	    stops = feed.stops
+	    shapes = feed.shapes
+	    
+	    # Get routes info in trips
+	    trips = pd.merge(trips, routes, how='left').loc[:, ['trip_id', 'route_id',
+		                                                'service_id', 'direction_id','shape_id']]
+	    
+	    # Get trips, routes and stops info in stop_times
+	    stop_times = pd.merge(stop_times, trips, how='left') 
+	    stop_times = pd.merge(stop_times, stops, how='left')
+	    
+	    if i==0:
+	    	routes_all = routes.copy(deep=True)
+	    	stops_all = stops.copy(deep=True)
+	    	stop_times_all = stops.copy(deep=True)
+	    	trips_all = trips.copy(deep=True)
+	    	shapes_all = shapes.copy(deep=True)
+	    else:
+	    	routes_all = pd.concat([routes_all, routes], ignore_index=True)
+	    	stops_all = pd.concat([stops_all, stops], ignore_index=True)
+	    	stop_times_all = pd.concat([stop_times_all, stop_times], ignore_index=True)
+	    	trips_all = pd.concat([trips_all, trips], ignore_index=True)
+	    	shapes_all_all = pd.concat([shapes_all, shapes], ignore_index=True)
+    
+    routes_all.drop_duplicates(inplace=True)
+    stops_all.drop_duplicates(inplace=True)
+    stop_times.drop_duplicates(inplace=True)
+    trips_all.drop_duplicates(inplace=True)
+    shapes_all.drop_duplicates(inplace=True)
+    
+    return routes_all, stops_all, stop_times_all, trips_all, shapes_all        
+    
+def import_gtfs(gtfs_path, busiest_date=True):
+    import warnings
+    warnings.filterwarnings("ignore")
+    import os
+    import pandas as pd
+    import zipfile
+    import partridge as ptg
+    # Partridge to read the feed
+    # service_ids = pd.read_csv(gtfs_path + '/trips.txt')['service_id'].unique()
+    # service_ids = frozenset(tuple(service_ids))
+        
+
     if busiest_date:
-        service_ids = ptg.read_busiest_date(gtfs_path)[1]
+    	service_ids = ptg.read_busiest_date(gtfs_path)[1]
     else:
         with zipfile.ZipFile(gtfs_path) as myzip:
             myzip.extract("trips.txt")

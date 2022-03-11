@@ -1,5 +1,6 @@
 from gtfs_functions.gtfs_functions import save_gdf
 from gtfs_functions.gtfs_functions import import_gtfs
+from gtfs_functions.gtfs_functions import import_gtfs_busiest_week
 from gtfs_functions.gtfs_functions import cut_gtfs
 from gtfs_functions.gtfs_functions import speeds_from_gtfs
 from gtfs_functions.gtfs_functions import stops_freq
